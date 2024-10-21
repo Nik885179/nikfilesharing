@@ -24,7 +24,7 @@ BOT_STATS_TEXT = os.environ.get("BOTS_STATS_TEXT","<b>BOT UPTIME </b>\n{uptime}"
 USER_REPLY_TEXT = os.environ.get("USER_REPLY_TEXT", "Don't send me messages directly I'm only File Share bot! ")
 
 #your bot token here from https://telegram.me/BotFather
-TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "7520786912:AAHtx7-UbGOCMa_OWBnui6Ld3JVQrgrbtoQ") 
+TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "7520786912:AAHCCKb-HrJ1sd3TfKY-PY7kmMrFIS4BBMw") 
 #your api id from https://my.telegram.org/apps
 APP_ID = int(os.environ.get("APP_ID", "22469064"))
 #your api hash from https://my.telegram.org/apps
