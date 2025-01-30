@@ -495,56 +495,139 @@ async def restart(client, message):
 
 
 if USE_PAYMENT:
-    @Bot.on_message(filters.command('add_prem') & filters.private & filters.user(ADMINS))
-    async def add_user_premium_command(client: Bot, message: Message):
-        while True:
-            try:
-                user_id = await client.ask(text="Enter id of user 🔢\n /cancel to cancel : ",chat_id = message.from_user.id, timeout=60)
-            except Exception as e:
-                print(e)
-                return  
-            if user_id.text == "/cancel":
-                await user_id.edit("Cancelled 😉!")
-                return
-            try:
-                await Bot.get_users(user_ids=user_id.text, self=client)
-                break
-            except:
-                await user_id.edit("❌ Error 😖\n\nThe admin id is incorrect.", quote = True)
-                continue
-        user_id = int(user_id.text)
-        while True:
-            try:
-                timeforprem = await client.ask(text="Enter the amount of time you want to provide the premium \nChoose correctly. Its not reversible.\n\n⁕ <code>1</code> for 7 days.\n⁕ <code>2</code> for 1 Month\n⁕ <code>3</code> for 3 Month\n⁕ <code>4</code> for 6 Month\n⁕ <code>5</code> for 1 year.🤑", chat_id=message.from_user.id, timeout=60)
-            except Exception as e:
-                print(e)
-                return
-            if not int(timeforprem.text) in [1, 2, 3, 4, 5]:
-                await message.reply("You have given wrong input. 😖")
-                continue
-            else:
-                break
-        timeforprem = int(timeforprem.text)
-        if timeforprem==1:
-            timestring = "7 days"
-        elif timeforprem==2:
-            timestring = "1 month"
-        elif timeforprem==3:
-            timestring = "3 month"
-        elif timeforprem==4:
-            timestring = "6 month"
-        elif timeforprem==5:
-            timestring = "1 year"
+    @Bot.on_message(filters.command('add_prem') & filters.private & is_admin)
+async def add_user_premium_command(client: Bot, message: Message):
+    # Prompt the admin to input the user ID
+    while True:
         try:
-            await increasepremtime(user_id, timeforprem)
-            await message.reply("Premium added! 🤫")
-            await client.send_message(
-            chat_id=user_id,
-            text=f"Update for you\n\nPremium plan of {timestring} added to your account. 🤫",
-        )
+            user_id_message = await client.ask(
+                text="<blockquote>Enter the ID of the user \n/cancel to cancel:</blockquote>", 
+                chat_id=message.from_user.id, 
+                timeout=60
+            )
         except Exception as e:
             print(e)
-            await message.reply("Some error occurred.\nCheck logs.. 😖\nIf you got premium added message then its ok.")
-        return
+            return  # Exit if there's an error (e.g., timeout)
+
+        if user_id_message.text == "/cancel":
+            await client.send_message(chat_id=message.chat.id, text="<blockquote>Cancelled 😉!</blockquote>")  # Notify about the cancellation
+            return
+
+        try:
+            await Bot.get_users(user_ids=user_id_message.text, self=client)
+            break  # Exit the loop if the user ID is valid
+        except:
+            await client.send_message(
+                chat_id=message.chat.id, 
+                text="<blockquote>❌ Error 😖\n\nThe user ID is incorrect.</blockquote>"  # Notify about the error
+            )
+            continue
+
+    user_id = int(user_id_message.text)  # Extract the user ID
+
+    # Prompt the admin to choose the premium duration
+    while True:
+        try:
+            timeforprem_message = await client.ask(
+                text=(
+                    "<blockquote>Enter the duration for the premium subscription:\n"
+                    "Choose correctly, as it's not reversible.\n\n"
+                    "⁕ <code>1</code> for 7 days\n"
+                    "⁕ <code>2</code> for 1 Month\n"
+                    "⁕ <code>3</code> for 3 Months\n"
+                    "⁕ <code>4</code> for 6 Months\n"
+                    "⁕ <code>5</code> for 1 Year 🤑</blockquote>"
+                ), 
+                chat_id=message.from_user.id, 
+                timeout=60
+            )
+        except Exception as e:
+            print(e)
+            return  # Exit if there's an error (e.g., timeout)
+
+        if not int(timeforprem_message.text) in [1, 2, 3, 4, 5]:
+            await client.send_message(chat_id=message.chat.id, text="You have given an incorrect input. 😖")
+            continue
+        else:
+            break
+
+    timeforprem = int(timeforprem_message.text)
+
+    # Map the input to a readable duration string
+    timestring = {
+        1: "7 days",
+        2: "1 month",
+        3: "3 months",
+        4: "6 months",
+        5: "1 year"
+    }[timeforprem]
+
+    # Attempt to update the user's premium status
+    try:
+        await increasepremtime(user_id, timeforprem)  # Update the database/backend
+        await client.send_message(chat_id=message.chat.id, text="<blockquote>Premium added! 🤫</blockquote>")  # Notify the admin
+
+        # Notify the target user
+        await client.send_message(
+            chat_id=user_id,
+            text=f"<blockquote>Update for you\n\nPremium plan of {timestring} has been added to your account. 🤫</blockquote>"
+        )
+    except Exception as e:
+        print(e)
+        await client.send_message(
+            chat_id=message.chat.id, 
+            text="<blockquote>Some error occurred.\nCheck logs.. 😖\nIf the user received the premium message, then it's okay.</blockquote>"
+        )
+
+
+@Bot.on_message(filters.command('short') & filters.private & is_admin)
+async def shorten_link_command(client, message):
+    id = message.from_user.id
+
+    try:
+        # Prompt the user to send the link to be shortened
+        set_msg = await client.ask(
+            chat_id=id,
+            text="<b><blockquote>⏳ Sᴇɴᴅ ᴀ ʟɪɴᴋ ᴛᴏ ʙᴇ sʜᴏʀᴛᴇɴᴇᴅ</blockquote>\n\nFᴏʀ ᴇxᴀᴍᴘʟᴇ: <code>https://example.com/long_url</code></b>",
+            timeout=60
+        )
+
+        # Validate the user input for a valid URL
+        url = set_msg.text.strip()
+
+        if url.startswith("http") and "://" in url:
+            try:
+                # Call the get_shortlink function
+                short_link = await get_shortlink(SHORTLINK_URL, SHORTLINK_API, url)
+
+                # Inform the user about the shortened link
+                await set_msg.reply(f"<b>🔗 Lɪɴᴋ Cᴏɴᴠᴇʀᴛᴇᴅ Sᴜᴄᴄᴇssғᴜʟʟʏ ✅</b>\n\n<blockquote>🔗 Sʜᴏʀᴛᴇɴᴇᴅ Lɪɴᴋ: <code>{short_link}</code></blockquote>")
+            except ValueError as ve:
+                # If shortener details are missing
+                await set_msg.reply(f"<b>❌ Error: {ve}</b>")
+            except Exception as e:
+                # Handle errors during the shortening process
+                await set_msg.reply(f"<b>❌ Error while shortening the link:\n<code>{e}</code></b>")
+        else:
+            # If the URL is invalid, prompt the user to try again
+            await set_msg.reply("<b>❌ Invalid URL. Please send a valid link that starts with 'http'.</b>")
+
+    except asyncio.TimeoutError:
+        # Handle timeout exceptions
+        await client.send_message(
+            id,
+            text="<b>⏳ Tɪᴍᴇᴏᴜᴛ. Yᴏᴜ ᴛᴏᴏᴋ ᴛᴏᴏ ʟᴏɴɢ ᴛᴏ ʀᴇsᴘᴏɴᴅ. Pʟᴇᴀsᴇ ᴛʀʏ ᴀɢᴀɪɴ.</b>",
+            disable_notification=True
+        )
+        print(f"! Timeout occurred for user ID {id} while processing '/short' command.")
+
+    except Exception as e:
+        # Handle any other exceptions
+        await client.send_message(
+            id,
+            text=f"<b>❌ Aɴ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀʀᴇᴅ:\n<code>{e}</code></b>",
+            disable_notification=True
+        )
+        print(f"! Error occurred on '/short' command: {e}")
 
         
