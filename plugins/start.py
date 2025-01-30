@@ -495,7 +495,7 @@ async def restart(client, message):
 
 
 if USE_PAYMENT:
-    @Bot.on_message(filters.command('add_prem') & filters.private & is_admin)
+    @Bot.on_message(filters.command('add_prem') & filters.private & filters.user(ADMINS))
 async def add_user_premium_command(client: Bot, message: Message):
     # Prompt the admin to input the user ID
     while True:
@@ -580,7 +580,7 @@ async def add_user_premium_command(client: Bot, message: Message):
         )
 
 
-@Bot.on_message(filters.command('short') & filters.private & is_admin)
+@Bot.on_message(filters.command('short') & filters.private & filters.user(ADMINS))
 async def shorten_link_command(client, message):
     id = message.from_user.id
 
@@ -598,7 +598,7 @@ async def shorten_link_command(client, message):
         if url.startswith("http") and "://" in url:
             try:
                 # Call the get_shortlink function
-                short_link = await get_shortlink(SHORTLINK_URL, SHORTLINK_API, url)
+                short_link = await get_shortlink(SHORTLINK_API_URL, SHORTLINK_API_KEY, url)
 
                 # Inform the user about the shortened link
                 await set_msg.reply(f"<b>🔗 Lɪɴᴋ Cᴏɴᴠᴇʀᴛᴇᴅ Sᴜᴄᴄᴇssғᴜʟʟʏ ✅</b>\n\n<blockquote>🔗 Sʜᴏʀᴛᴇɴᴇᴅ Lɪɴᴋ: <code>{short_link}</code></blockquote>")
