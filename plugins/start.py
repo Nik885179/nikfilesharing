@@ -494,8 +494,7 @@ async def restart(client, message):
         print(e)
 
 
-if USE_PAYMENT:
-    @Bot.on_message(filters.command('add_prem') & filters.private & filters.user(ADMINS))
+@Bot.on_message(filters.command('add_prem') & filters.private & filters.user(ADMINS))
 async def add_user_premium_command(client: Bot, message: Message):
     # Prompt the admin to input the user ID
     while True:
