@@ -33,7 +33,7 @@ USER_REPLY_TEXT = os.environ.get("USER_REPLY_TEXT", "Don't send me messages dire
 
 
 #your bot token here from https://telegram.me/BotFather
-TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "8101575666:AAG7g9F6D6XaKzqmxbAqP7L5kEFqKKigrhc") 
+TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "8101575666:AAHURvjLL8mIUDq-k-_vE9MdsPtTjqp_sYU") 
 #your api id from https://my.telegram.org/apps
 APP_ID = int(os.environ.get("APP_ID", "21484586"))
 #your api hash from https://my.telegram.org/apps
