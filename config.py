@@ -11,7 +11,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 #force user to join your backup channel leave 0 if you don't need.
-FORCE_SUB_CHANNEL = int(os.environ.get("FORCE_SUB_CHANNEL", "-1002429448266"))
+FORCE_SUB_CHANNEL = int(os.environ.get("FORCE_SUB_CHANNEL", "-1002125606566"))
 FORCE_SUB_CHANNEL2 = int(os.environ.get("FORCE_SUB_CHANNEL2", "-1002145632049"))
 
 if FORCE_SUB_CHANNEL > FORCE_SUB_CHANNEL2:
@@ -33,7 +33,7 @@ USER_REPLY_TEXT = os.environ.get("USER_REPLY_TEXT", "Don't send me messages dire
 
 
 #your bot token here from https://telegram.me/BotFather
-TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "7877034637:AAFSrtehWkaFNtrGziyDzE7lNv5_s2RpRKg") 
+TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "7877034637:AAE-EELDcUsgRs4qxKsA7abMi7cPSKCv3H4") 
 #your api id from https://my.telegram.org/apps
 APP_ID = int(os.environ.get("APP_ID", "21484586"))
 #your api hash from https://my.telegram.org/apps
@@ -43,9 +43,9 @@ CHANNEL_ID = int(os.environ.get("CHANNEL_ID", "-1002298993427"))
 #your id of telegram can be found by https://t.me/MissRose_bot with '/id' command
 OWNER_ID = int(os.environ.get("OWNER_ID", "5915807321"))
 #port set to default 8080
-PORT = os.environ.get("PORT", "6666")
+PORT = os.environ.get("PORT", "3333")
 #your database url mongodb only You can use mongo atlas free cloud database
-DB_URL = os.environ.get("DB_URL", "mongodb+srv://koyeb77user:rohit870@cluster0.wgdkp.mongodb.net/?retryWrites=true&w=majority")
+DB_URL = os.environ.get("DB_URL", "mongodb+srv://Nik885179:db_Nik%40885179@mybotcluster.apocv.mongodb.net/?retryWrites=true&w=majority&appName=Mybotcluster")
 #your database name
 DB_NAME = os.environ.get("DB_NAME", "filestorabot")
 
