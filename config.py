@@ -45,9 +45,10 @@ OWNER_ID = int(os.environ.get("OWNER_ID", "5915807321"))
 #port set to default 8080
 PORT = os.environ.get("PORT", "3333")
 #your database url mongodb only You can use mongo atlas free cloud database
-DB_URL = os.environ.get("DB_URL", "mongodb+srv://Nik885179:db_Nik%40885179@mybotcluster.apocv.mongodb.net/?retryWrites=true&w=majority&appName=Mybotcluster")
+DB_URL = os.environ.get("DB_URL", "mongodb+srv://koyeb77user:rohit870@cluster0.wgdkp.mongodb.net/?retryWrites=true&w=majority")
+#your database name")
 #your database name
-DB_NAME = os.environ.get("DB_NAME", "filestorabot")
+DB_NAME = os.environ.get("DB_NAME", "filestorabot2")
 
 #for creating telegram thread for bot to improve performance of the bot
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
